@@ -8,19 +8,12 @@ run() {
 }
 
 installTykOSS() {
-    echo 'Creating a namespace for Tyk OSS'
-    kubectl create ns tyk
-
     echo '\nInstalling Redis'
     run helm install redis tyk-helm/simple-redis -n tyk
-    checkResult
-
     run kubectl rollout status deployment/redis -n tyk
 
     echo '\nInstalling Tyk Gateway'
-    # run helm install tyk-headless ./charts/tyk-headless -f ./tyk-headless-values.yaml -n tyk
-    run helm install tyk-headless ./charts/tyk-headless -n tyk
-
+    run helm install tyk-headless ./charts/tyk-headless -f ./manifests/tyk-headless-values.yaml -n tyk
     run kubectl rollout status deployment/gateway-tyk-headless -n tyk
 
     echo "\ntyk-headless installed successfully"
@@ -31,7 +24,6 @@ installCertManager() {
     kubectl create ns cert-manager
 
     # Install cert-manager
-    # run kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.0/cert-manager.yaml -n cert-manager
     run kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.8.0/cert-manager.yaml
 
 
@@ -66,6 +58,13 @@ main() {
     # Check dependencies used by this script
     check_executable kubectl
     check_executable helm
+
+    echo 'Creating a namespace for Tyk OSS'
+    kubectl create ns tyk
+
+    # prepare Persistent Volumes
+    run kubectl apply -f ./manifests/gw-pv.yaml
+    run kubectl apply -f ./manifests/gw-pvc.yaml -n tyk
 
     run helm repo add tyk-helm https://helm.tyk.io/public/helm/charts/
     helm repo update

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gw-local-pvc
+  namespace: tyk
+spec:
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: 1Gi
+  # volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
