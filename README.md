@@ -22,6 +22,14 @@ forwarded to a pod where the ApiDefinition was not created.
 
 ## Demo
 
+To solve this problem, you can use `Persistent Volumes` with Tyk Operator.
+
+Each Gateway pod will use shared persistent volumes, so that each of them can access to same files. However, this is not enough. Since Gateway requires hot-reloads, you need to send additional group reload request each time. Tyk Operator helps us to solve this.
+
+![solution](./img/demo2-2.png)
+
+--- 
+
 ### Prepare environment
 
 - Create a cluster
@@ -37,4 +45,3 @@ according to your cluster information.
 ```
 
 > This script depends on `helm` and `kubectl`.
-
