@@ -26,7 +26,7 @@ To solve this problem, you can use `Persistent Volumes` with Tyk Operator.
 
 Each Gateway pod will use shared persistent volumes, so that each of them can access to same files. However, this is not enough. Since Gateway requires hot-reloads, you need to send additional group reload request each time. Tyk Operator helps us to solve this.
 
-![solution](./img/demo2-2.png)
+![solution](./img/demo2-pv)
 
 --- 
 
